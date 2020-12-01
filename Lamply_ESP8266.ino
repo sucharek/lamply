@@ -167,7 +167,7 @@ void setup()
   Serial.begin(9600);
   WiFiManager wifiManager;
   //wifiManager.resetSettings();    //Uncomment this to wipe WiFi settings from EEPROM on boot.  Comment out and recompile/upload after 1 boot cycle.
-  wifiManager.autoConnect("Blynk lamp");
+  wifiManager.autoConnect("Lamply");
   //if you get here you have connected to the WiFi
   Serial.println("connected...yeey :)");
   //pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output, I like blinkies.

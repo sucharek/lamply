@@ -1,6 +1,5 @@
 #include <Coordinates.h>
 #include <Adafruit_NeoPixel.h>
-//#define BLYNK_PRINT Serial    // Comment this out to disable prints and save space
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
 #include <DNSServer.h>
@@ -114,7 +113,6 @@ BLYNK_WRITE(V1) // V5 is the number of Virtual Pin
   //v1 = param.asInt();
   switch (param.asInt()) {
     case 1: {
-        // Serial.println("1");
         lightUp = false;
         controll = false;
         gameplay = true;
@@ -122,7 +120,6 @@ BLYNK_WRITE(V1) // V5 is the number of Virtual Pin
         break;
       }
     case 2: {
-        // Serial.println("2");
         lightUp = false;
         controll = true;
         gameplay = false;
@@ -130,7 +127,6 @@ BLYNK_WRITE(V1) // V5 is the number of Virtual Pin
         break;
       }
     case 3: {
-        // Serial.println("3");
         lightUp = false;
         controll = false;
         gameplay = false;
@@ -189,7 +185,6 @@ void nextFrame() {
     int p = i + pointer;
     if (p > 19) p = p - 20;
     nastavRGB(LEDAnimation[p].R(), LEDAnimation[p].G(), LEDAnimation[p].B(), i);
-    //Serial.println(p);
   }
   pointer++;
   if (pointer > 19) {
@@ -198,7 +193,6 @@ void nextFrame() {
 }
 
 void giveMeGameplay() {
-  //Serial.println("SPOUSTIM GAMEPLAY");
   while (genArray > 5) {
     int r = random (5, 50);
     if (r % 2 == 0) r += 1;
@@ -208,10 +202,6 @@ void giveMeGameplay() {
       if (r % 2 == 0) r += 1;
       genArray = 0;
     }
-    /* Serial.print("r: ");
-      Serial.println(r);
-      Serial.print("genArray: ");
-      Serial.println(genArray);*/
     LEDAnimationGame[genArray + 1 + (r - 1) / 2] = gameplayColor;
     int part = (r - 1) / 2 + 1;
     for (int i = 0; i < (r - 1) / 2; i++) {
@@ -220,17 +210,6 @@ void giveMeGameplay() {
     }
 
   }
-  // Serial.println("Pole animaci:");
-  for (int i = 0; i < 100; i++) {
-    /*   Serial.print(99 - i);
-       Serial.print(".  ");
-       Serial.print(LEDAnimationGame[i].R());
-       Serial.print("   ");
-       Serial.print(LEDAnimationGame[i].G());
-       Serial.print("   ");
-       Serial.println(LEDAnimationGame[i].B());*/
-  }
-  //delay(10000);
   genArray = 100;
 }
 
@@ -243,20 +222,12 @@ void game() {
   if (pointer == 10 && n < 10) {
     for (int i = 0; i < 10; i++) {
       LEDAnimation[i] = LEDAnimationGame[i + n * 10]; //nastavRGB(LEDAnimationGame[i+n*10].R(),LEDAnimationGame[i+n*10].G(),LEDAnimationGame[i+n*10].B(), i);
-      /*Serial.print("Nastavuju LEDAnimation: ");
-        Serial.print(i);
-        Serial.print(" na LEDAnimationGame: ");
-        Serial.println(i + n * 10);*/
     }
     if (gameplay) n++;
   }
   if ((pointer == 0 || pointer == 20) && n < 10) {
     for (int i = 0; i < 10; i++) {
       LEDAnimation[i + 10] = LEDAnimationGame[i + n * 10]; //nastavRGB(LEDAnimationGame[i+n*10].R(),LEDAnimationGame[i+n*10].G(),LEDAnimationGame[i+n*10].B(), i);
-      /*Serial.print("Nastavuju LEDAnimation: ");
-        Serial.print(i + 10);
-        Serial.print(" na LEDAnimationGame: ");
-        Serial.println(i + n * 10);*/
     }
     if (gameplay) n++;
   }
@@ -270,8 +241,6 @@ void game() {
 
 
 void intro () {
-  //rgbWS.setBrightness(255);
-  //nextFrame();
   if (cykle >= 5) {
     afterboot = false;
     gettingSleep = true;
@@ -289,10 +258,8 @@ void sleep () {
     LEDAnimation[i].setRGB(r, g, b);
   }
   if (cykle >= 2) {
-    //Serial.println("USINAM");
     gettingSleep = false;
     cykle = 0;
-    //gameplay = true;
     for (int i = 0; i < 20; i++) {
       LEDAnimation[i].setRGB(0, 0, 0);
     }
@@ -392,13 +359,6 @@ void loop()
         doBubble();
         for (int i = 0; i < 10; i++) {
           nastavRGB(TouchAnimation[i].R(), TouchAnimation[i].G(), TouchAnimation[i].B(), i);
-         /* Serial.print(i);
-          Serial.print(". :");
-          Serial.print(TouchAnimation[i].R());
-          Serial.print(" ");
-          Serial.print(TouchAnimation[i].G());
-          Serial.print(" ");
-          Serial.println(TouchAnimation[i].B());*/
         }
       }
     }
@@ -413,29 +373,21 @@ void loop()
 
 
 
-  if (controll) { //&& gameplay == false && bubbles == false) {
+  if (controll) {
     int vir3 = v3 - 500;
     int vir2 = v2 - 500;
     point.fromCartesian(vir2, vir3);
     double c = point.getR() / 500;
     double degree = point.getAngle() * 57296 / 1000;
     touch(degree, c * c * c);
-    /*Serial.print(" c: ");
-      Serial.print(c);
-      Serial.print(" degree: ");
-      Serial.println(degree* 57296 / 1000);*/
   }
 
 }
 void nastavRGB (int r, int g, int b, int cislo) {
   // vytvoření proměnné pro ukládání barev
   uint32_t barva;
-  // načtení barvy do proměnné
   barva = rgbWS.Color(r / v0, g / v0, b / v0);
-  // nastavení barvy pro danou LED diodu,
-  // číslo má pořadí od nuly
   rgbWS.setPixelColor(cislo, barva);
-  // aktualizace barev na všech modulech
   rgbWS.show();
 }
 
